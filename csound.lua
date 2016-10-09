@@ -3,6 +3,7 @@ local csound = {}
 local instr_param = {
     'start',
     'dur',
+    'freq',
 }
 
 local instr = {}
@@ -40,7 +41,7 @@ csound.instr = function( name )
         local output_parm = {}
         for i = 1, #instr_param do
             local p = parm[ instr_param[ i ] ]
-            io.stdout:write( p and tonumber( p ) or 0, ' ' )
+            io.stdout:write( p and tonumber( p ) or '0', ' ' )
         end
         io.stdout:write( '\n' )
     end
