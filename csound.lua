@@ -1,5 +1,10 @@
 local csound = {}
 
+local instr_param = {
+    'start',
+    'dur',
+}
+
 local instr = {}
 
 csound.start = function()
@@ -28,16 +33,16 @@ csound.instr = function( name )
     instr[ instr_number ] = name
     print( 'instr ' .. tostring( instr_number ) )
     local f = assert( io.open( name .. '.orc' ) )
-    print( f:read'*a' )
+    io.stdout:write( f:read'*a' )
     print( 'endin' )
-    return function( start, duration, ... )
-        io.stdout:write(
-            'i ',
-            tostring( instr_number ), ' ',
-            tostring( start ), ' ',
-            tostring( duration ),
-            '\n'
-        )
+    return function( parm )
+        io.stdout:write( 'i ', tostring( instr_number ), ' ' )
+        local output_parm = {}
+        for i = 1, #instr_param do
+            local p = parm[ instr_param[ i ] ]
+            io.stdout:write( p and tonumber( p ) or 0, ' ' )
+        end
+        io.stdout:write( '\n' )
     end
 end
 

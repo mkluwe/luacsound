@@ -7,6 +7,6 @@ local sine = instr( 'sine' )
 
 csound.play()
 
-sine( 0, 1 )
+sine{ start = 0, dur = 1 }
 
 csound.stop()
