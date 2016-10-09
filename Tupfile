@@ -1,1 +1,2 @@
-: Ex1.csd |> csound %f > %o |> %B.wav
+: Ex1.lua |> lua %f > %o |> %B.csd
+: foreach *.csd |> csound %f > %o |> %B.wav
