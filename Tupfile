@@ -1,3 +1,4 @@
 : Ex1.lua |> lua %f > %o |> %B.csd
-: foreach *.csd |> csound %f > %o |> %B.wav
+: foreach *.csd |> csound %f > %o |> %B.aiff
+: foreach *.aiff |> sox %f %o norm -3 |> %B.wav
 : foreach *.wav |> oggenc %f |> %B.ogg

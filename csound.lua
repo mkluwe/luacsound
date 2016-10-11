@@ -12,7 +12,7 @@ csound.start = function()
     print [[
 <CsoundSynthesizer>
 <CsOptions>
--o stdout
+-A -o stdout -f
 </CsOptions>
 <CsInstruments>]]
 end
