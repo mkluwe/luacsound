@@ -2,6 +2,7 @@ local function assertEqual( actual, expected )
     if actual ~= expected then
         io.stdout:write( 'Actual:\n=======\n', actual, '\n',
                          '\nExpected:\n=========\n', expected )
+        os.exit( 1 )
     end
 end
 
