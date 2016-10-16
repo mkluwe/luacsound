@@ -6,29 +6,6 @@ local instr_param = {
     'freq',
 }
 
-local instr = {}
-
-csound.start = function()
-    print [[
-<CsoundSynthesizer>
-<CsOptions>
--A -o stdout -f
-</CsOptions>
-<CsInstruments>]]
-end
-
-csound.stop = function()
-    print [[
-</CsScore>
-</CsoundSynthesizer>]]
-end
-
-csound.play = function()
-    print [[
-</CsInstruments>
-<CsScore>]]
-end    
-
 local pitch = {}
 local notes = {
     'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'
@@ -52,23 +29,63 @@ local function convert_pitch( freq )
     return pitch[ note ][ tonumber( octave ) ]
 end
 
-csound.instr = function( name )
-    local instr_number = #instr + 1 
-    instr[ instr_number ] = name
-    print( 'instr ' .. tostring( instr_number ) )
+csound.instr = function( self, name )
+    local instr_number = #self.instruments + 1 
+    local instrument = {}
+    self.instruments[ instr_number ] = instrument
+    local output = {
+        'instr ' .. tostring( instr_number ) .. '\n'
+    }
     local f = assert( io.open( name .. '.orc' ) )
-    io.stdout:write( f:read'*a' )
-    print( 'endin' )
+    output[ #output + 1 ] = f:read( 'a' )
+    output[ #output + 1 ] = 'endin\n'
+    instrument.output = table.concat( output, '' )
     return function( parm )
-        io.stdout:write( 'i ', tostring( instr_number ), ' ' )
+        local output = { 'i ', tostring( instr_number ), ' ' }
         parm.freq = convert_pitch( parm.freq )
         local output_parm = {}
         for i = 1, #instr_param do
             local p = parm[ instr_param[ i ] ]
-            io.stdout:write( p and tonumber( p ) or '0', ' ' )
+            output[ #output + 1 ] = p and tonumber( p ) or '0'
+            output[ #output + 1 ] = ' '
         end
-        io.stdout:write( '\n' )
+        output[ #output + 1 ] = '\n'
+        self.score[ #self.score + 1 ] = table.concat( output, '' )
     end
 end
 
-return csound
+csound.output = function( self )
+    local output = {
+    [[
+<CsoundSynthesizer>
+<CsOptions>
+-A -o stdout -f
+</CsOptions>
+<CsInstruments>
+]]
+    }
+    for i = 1, #self.instruments do
+        output[ #output + 1 ] = self.instruments[ i ].output
+    end
+    output[ #output + 1 ] = [[
+</CsInstruments>
+<CsScore>
+]]
+    for i = 1, #self.score do
+        output[ #output + 1 ] = self.score[ i ]
+    end
+    output[ #output + 1 ] = [[
+</CsScore>
+</CsoundSynthesizer>
+]]
+    return table.concat( output, '' )
+end
+
+return function()
+    return setmetatable( {
+        instruments = {},
+        score = {},
+    }, {
+        __index = csound
+    } )
+end
