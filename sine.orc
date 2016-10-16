@@ -1,2 +1,2 @@
-aSin      poscil    0dbfs/4, p4
+aSin      poscil    1, p4
           out       aSin
