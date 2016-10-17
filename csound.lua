@@ -56,8 +56,16 @@ csound.instr = function( self, name )
         parm.freq = convert_pitch( parm.freq )
         local output_parm = {}
         for i = 1, #instr_param do
-            local p = parm[ instr_param[ i ] ]
-            output[ #output + 1 ] = p and tonumber( p ) or '0'
+            local param_name = instr_param[ i ]
+            local p = parm[ param_name ]
+            if p then
+                output[ #output + 1 ] = tostring( p )
+                instrument[ param_name ] = p
+            else
+                local carry_param = instrument[ param_name ]
+                carry_param = carry_param and tostring( carry_param )
+                output[ #output + 1 ] = carry_param or '0'
+            end
             output[ #output + 1 ] = ' '
         end
         output[ #output ] = '\n'
