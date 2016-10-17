@@ -50,7 +50,8 @@ csound.instr = function( self, name )
     output[ #output + 1 ] = convert_param( f:read( 'a' ) )
     output[ #output + 1 ] = 'endin\n'
     instrument.output = table.concat( output, '' )
-    return function( parm )
+    local fun
+    fun = function( parm )
         local output = { 'i ', tostring( instr_number ), ' ' }
         parm.freq = convert_pitch( parm.freq )
         local output_parm = {}
@@ -59,9 +60,11 @@ csound.instr = function( self, name )
             output[ #output + 1 ] = p and tonumber( p ) or '0'
             output[ #output + 1 ] = ' '
         end
-        output[ #output + 1 ] = '\n'
+        output[ #output ] = '\n'
         self.score[ #self.score + 1 ] = table.concat( output, '' )
+        return fun
     end
+    return fun
 end
 
 csound.output = function( self )
