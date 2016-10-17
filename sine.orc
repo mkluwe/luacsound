@@ -1,2 +1,2 @@
-aSin      poscil    1, p4
+aSin      poscil    $vol, $freq
           out       aSin

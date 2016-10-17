@@ -3,8 +3,12 @@ local csound = {}
 local instr_param = {
     'start',
     'dur',
+    'vol',
     'freq',
 }
+for i = 1, #instr_param do
+    instr_param[ instr_param[ i ] ] = i + 1
+end
 
 local pitch = {}
 local notes = {
@@ -29,6 +33,12 @@ local function convert_pitch( freq )
     return pitch[ note ][ tonumber( octave ) ]
 end
 
+local function convert_param( text )
+    return text:gsub( '%$(%w+)', function( parm )
+        return ( 'p%d' ):format( instr_param[ parm ] )
+    end )
+end
+
 csound.instr = function( self, name )
     local instr_number = #self.instruments + 1 
     local instrument = {}
@@ -37,7 +47,7 @@ csound.instr = function( self, name )
         'instr ' .. tostring( instr_number ) .. '\n'
     }
     local f = assert( io.open( name .. '.orc' ) )
-    output[ #output + 1 ] = f:read( 'a' )
+    output[ #output + 1 ] = convert_param( f:read( 'a' ) )
     output[ #output + 1 ] = 'endin\n'
     instrument.output = table.concat( output, '' )
     return function( parm )
