@@ -25,7 +25,8 @@ assertEqual( output, [[
 </CsOptions>
 <CsInstruments>
 instr 1
-aSin      poscil    p4, p5
+aEnv      linen     p4, 0.01, p3, 0.01
+aSin      poscil    aEnv, p5
           out       aSin
 endin
 </CsInstruments>
