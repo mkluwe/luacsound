@@ -47,7 +47,7 @@ csound.instr = function( self, name )
         'instr ' .. tostring( instr_number ) .. '\n'
     }
     local f = assert( io.open( name .. '.orc' ) )
-    output[ #output + 1 ] = convert_param( f:read( 'a' ) )
+    output[ #output + 1 ] = convert_param( f:read( '*a' ) )
     output[ #output + 1 ] = 'endin\n'
     instrument.output = table.concat( output, '' )
     local fun
