@@ -1,4 +1,8 @@
-local csd = require 'csound'()
+-- use local package; you don't have to use this if the `luacsound` is
+-- installed
+package.path = package.path .. ';../?/init.lua'
+
+local csd = require 'luacsound'()
 
 local sine = csd:instr( 'sine' )
 

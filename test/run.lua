@@ -6,11 +6,12 @@ local function assertEqual( actual, expected )
     end
 end
 
-local csound = require 'csound'
+package.path = package.path .. ';./?/init.lua'
+local csound = require 'luacsound'
 
 local csd = csound()
 
-local sine = csd:instr( 'sine' )
+local sine = csd:instr( 'examples/sine' )
 
 sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
     { freq = 'f5', start = 1 }
