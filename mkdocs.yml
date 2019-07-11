@@ -1,0 +1,12 @@
+site_name: luacsound
+
+repo_url: https://github.com/mkluwe/luacsound
+
+site_author: Matthias Kluwe
+
+copyright: Copyright (c) 2016–2019 Matthias Kluwe
+
+nav:
+    - Home:    index.md
+    - Manual:  manual.md
+    - License: license.md
