@@ -49,8 +49,8 @@ sine{ freq = 'f4', start = 0.5, dur = 1, vol = 2 }
 print( csd:output() )
 ```
 
-See the [manual](https://mkluwe.github.io/luacsound/) for a complete description
-of the functionality.
+See the [manual](https://mkluwe.github.io/luacsound/manual/) for a complete
+description of the functionality.
 
 ## Contributing
 
