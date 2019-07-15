@@ -1,26 +1,43 @@
 local csound = {}
 
-local pitch = {}
-local notes = {
-    'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'
+-- standard scale
+local scale = {
+    [ 'cb' ] = -1,
+    [ 'c'  ] =  0,
+    [ 'c#' ] =  1,
+    [ 'db' ] =  1,
+    [ 'd'  ] =  2,
+    [ 'd#' ] =  3,
+    [ 'eb' ] =  3,
+    [ 'e'  ] =  4,
+    [ 'e#' ] =  5,
+    [ 'fb' ] =  4,
+    [ 'f'  ] =  5,
+    [ 'f#' ] =  6,
+    [ 'gb' ] =  6,
+    [ 'g'  ] =  7,
+    [ 'g#' ] =  8,
+    [ 'ab' ] =  8,
+    [ 'a'  ] =  9,
+    [ 'a#' ] = 10,
+    [ 'bb' ] = 10,
+    [ 'b'  ] = 11,
+    [ 'b#' ] = 12,
 }
-for i = 1, #notes do
-    pitch[ notes[ i ] ] = {
-        [4] = 440.0 * math.pow( 2.0, ( i - 10.0 ) / 12.0 )
-    }
-end
-for _, v in pairs( pitch ) do
-    for i = 0, 10 do
-        v[ i ] = v[ 4 ] * math.pow( 2.0, i - 4 )
-    end
-end
 
-local function convert_pitch( freq )
-    if type( freq ) == 'number' then
-        return freq
-    end
-    local note, octave = freq:match( '(%D+)(%d+)' )
-    return pitch[ note ][ tonumber( octave ) ]
+local pitch = {}
+
+-- convert a given note to a pitch in standard twelve-tone equal temperament
+-- tuning
+local function convert_pitch( note )
+    if type( note ) == 'number' then return note end
+    local freq = pitch[ note ]
+    if freq then return freq end
+    local name, octave = note:match( '(%D+)(%d+)' )
+    octave = tonumber( octave )
+    freq = 440.0 * math.pow( 2.0, octave - 5 + ( scale[ name ] + 3 ) / 12 )
+    pitch[ note ] = freq
+    return freq
 end
 
 csound.read_instrument = function( self, name )

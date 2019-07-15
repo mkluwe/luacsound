@@ -14,8 +14,8 @@ local csd = csound()
 local sine = csd:instr( 'examples/sine' )
 
 sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
-    { freq = 'f5', start = 1 }
-    { freq = 'f4', start = 0.5 }
+    { freq = 'f#5', start = 1 }
+    { freq = 'gb4', start = 0.5 }
 
 local output = csd:output()
 
@@ -33,8 +33,8 @@ endin
 </CsInstruments>
 <CsScore>
 i 1 0 1 2 1396.912925732
-i 1 1 1 2 698.45646286601
-i 1 0.5 1 2 349.228231433
+i 1 1 1 2 739.98884542327
+i 1 0.5 1 2 369.99442271163
 </CsScore>
 </CsoundSynthesizer>
 ]] )
