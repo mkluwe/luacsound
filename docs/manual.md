@@ -40,6 +40,29 @@ the given name, `sine.orc` in this example (`.orc` is the extension Csound
 traditionally uses for instrument definitions). The method returns a function
 that can be used to fill the score of the Csd-object with notes.
 
+## Instrument files
+
+Defining instruments is done one instrument per file, which is quite pratical
+for purposes of re-use. Starting the instument block with `instr` and ending it
+with `endin` is ommitted. Instead of writing
+
+```
+          instr 3                       ; p3=duration of note
+k1        linen     p4, p6, p3, p7      ; p4=amp
+a1        oscil     k1, p5, 1           ; p5=freq
+          out       a1                  ; p6=attack time
+          endin                         ; p7=release time
+```
+
+and documenting the parameters, named parameters are used. Instruments are
+numbered automatically when loaded. The example above becomes
+
+```
+k1        linen     $amp, $attack, $dur, $release
+a1        oscil     k1, $freq, 1
+          out       a1
+```
+
 ## Using instruments
 
 Using loaded instruments is easy. Simply call the associated functions,
@@ -82,6 +105,15 @@ sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
     { freq = 'f5', start = 1 }
     { freq = 'f4', start = 0.5 }
 ```
+
+### Pitch
+
+You can use numbers for frequency parameters, such as `freq = 880.2`. A
+converter from note names to numeric frequencies is built in, using standard
+twelve-tone equal temperament tuning. As shown above, the note `f5` converts to
+the frequency of an *f* above the 440 Hz *a*, approximately 698.456 Hz. Sharp
+and flat notes are specified using `#` or `b` as you might expect, for example
+`f#5` or `gb5`.
 
 ## Generating the output
 
