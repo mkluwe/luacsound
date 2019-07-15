@@ -1,15 +1,5 @@
 local csound = {}
 
-local instr_param = {
-    'start',
-    'dur',
-    'vol',
-    'freq',
-}
-for i = 1, #instr_param do
-    instr_param[ instr_param[ i ] ] = i + 1
-end
-
 local pitch = {}
 local notes = {
     'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'
@@ -33,31 +23,45 @@ local function convert_pitch( freq )
     return pitch[ note ][ tonumber( octave ) ]
 end
 
-local function convert_param( text )
-    return text:gsub( '%$(%w+)', function( parm )
-        return ( 'p%d' ):format( instr_param[ parm ] )
+csound.read_instrument = function( self, name )
+    local f = assert( io.open( name .. '.orc' ) )
+    local text = f:read( '*a' )
+    local instrument = {}
+    self.instruments[ #self.instruments + 1 ] = instrument
+    instrument.number = #self.instruments 
+    local output = {}
+    output[ #output + 1 ] = 'instr '
+    output[ #output + 1 ] = instrument.number .. '\n'
+    output[ #output + 1 ] = text
+    output[ #output + 1 ] = 'endin\n'
+    output = table.concat( output, '' )
+    instrument.param = { 'number', 'start', 'dur',
+        number = 1, start = 2, dur = 3 }
+    for param in text:gmatch( '%$(%w+)' ) do
+        if not instrument.param[ param ] then
+            instrument.param[ #instrument.param + 1 ] = param
+            instrument.param[ param ] = #instrument.param
+        end
+    end
+    instrument.output = output:gsub( '%$(%w+)', function( param )
+        return ( 'p%d' ):format( instrument.param[ param ] )
     end )
+    return instrument
 end
 
 csound.instr = function( self, name )
-    local instr_number = #self.instruments + 1 
-    local instrument = {}
-    self.instruments[ instr_number ] = instrument
-    local output = {
-        'instr ' .. tostring( instr_number ) .. '\n'
-    }
-    local f = assert( io.open( name .. '.orc' ) )
-    output[ #output + 1 ] = convert_param( f:read( '*a' ) )
-    output[ #output + 1 ] = 'endin\n'
-    instrument.output = table.concat( output, '' )
+    local instrument = self:read_instrument( name )
     local fun
-    fun = function( parm )
-        local output = { 'i ', tostring( instr_number ), ' ' }
-        parm.freq = convert_pitch( parm.freq )
-        local output_parm = {}
-        for i = 1, #instr_param do
-            local param_name = instr_param[ i ]
-            local p = parm[ param_name ]
+    local param = {}
+    fun = function( next_param )
+        local output = { 'i ', instrument.number, ' ' }
+        for k, v in pairs( next_param ) do
+            param[ k ] = v
+        end
+        param.freq = convert_pitch( param.freq )
+        for i = 2, #instrument.param do
+            local param_name = instrument.param[ i ]
+            local p = param[ param_name ]
             if p then
                 output[ #output + 1 ] = tostring( p )
                 instrument[ param_name ] = p
