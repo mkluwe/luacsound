@@ -105,6 +105,17 @@ sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
     { freq = 'f4', start = 0.5 }
 ```
 
+As a means to change instrument parameter without generating a note in the
+score, the instrument has a method `set`. Again, here is an alternative way
+to create the exact same score as abobe:
+
+```lua
+sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
+    :set{ freq = 'f#5' }
+    { start = 1 }
+    { freq = 'gb4', start = 0.5 }
+```
+
 ### Pitch
 
 You can use numbers for frequency parameters, such as `freq = 880.2`. A

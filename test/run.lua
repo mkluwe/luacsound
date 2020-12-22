@@ -38,3 +38,34 @@ i 1 0.5 1 2 369.99442271163
 </CsScore>
 </CsoundSynthesizer>
 ]] )
+
+local csd = csound()
+
+local sine = csd:instr( 'examples/sine' )
+
+sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
+    :set{ freq = 'f#5' }
+    { start = 1 }
+    { freq = 'gb4', start = 0.5 }
+
+local output = csd:output()
+
+assertEqual( output, [[
+<CsoundSynthesizer>
+<CsOptions>
+-A -o stdout -f
+</CsOptions>
+<CsInstruments>
+instr 1
+aEnv      linen     p4, 0.01, p3, 0.01
+aSin      poscil    aEnv, p5
+          out       aSin
+endin
+</CsInstruments>
+<CsScore>
+i 1 0 1 2 1396.912925732
+i 1 1 1 2 739.98884542327
+i 1 0.5 1 2 369.99442271163
+</CsScore>
+</CsoundSynthesizer>
+]] )

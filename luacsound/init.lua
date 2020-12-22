@@ -68,15 +68,16 @@ end
 
 csound.instr = function( self, name )
     local instrument = self:read_instrument( name )
+    local param = {}
     local fun = function( obj, next_param )
         local output = { 'i ', instrument.number, ' ' }
         for k, v in pairs( next_param ) do
-            obj.param[ k ] = v
+            param[ k ] = v
         end
-        obj.param.freq = convert_pitch( obj.param.freq )
+        param.freq = convert_pitch( param.freq )
         for i = 2, #instrument.param do
             local param_name = instrument.param[ i ]
-            local p = obj.param[ param_name ]
+            local p = param[ param_name ]
             if p then
                 output[ #output + 1 ] = tostring( p )
                 instrument[ param_name ] = p
@@ -91,7 +92,15 @@ csound.instr = function( self, name )
         self.score[ #self.score + 1 ] = table.concat( output, '' )
         return obj
     end
-    return setmetatable( { param = {} }, { __call = fun } )
+    local methods = {
+        set = function( obj, next_param )
+            for k, v in pairs( next_param ) do
+                param[ k ] = v
+            end
+            return obj
+        end
+    }
+    return setmetatable( {}, { __call = fun, __index = methods } )
 end
 
 csound.output = function( self )
