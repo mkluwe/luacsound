@@ -35,7 +35,7 @@ local function convert_pitch( note )
     if freq then return freq end
     local name, octave = note:match( '(%D+)(%d+)' )
     octave = tonumber( octave )
-    freq = 440.0 * math.pow( 2.0, octave - 5 + ( scale[ name ] + 3 ) / 12 )
+    freq = 440.0 * 2.0^( octave - 5 + ( scale[ name ] + 3 ) / 12 )
     pitch[ note ] = freq
     return freq
 end
