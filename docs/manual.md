@@ -43,7 +43,7 @@ that can be used to fill the score of the Csd-object with notes.
 ## Instrument files
 
 Defining instruments is done one instrument per file, which is quite pratical
-for purposes of re-use. Starting the instument block with `instr` and ending it
+for purposes of re-use. Starting the instrument block with `instr` and ending it
 with `endin` is ommitted. Instead of writing
 
 ```
@@ -77,8 +77,8 @@ sine{ freq = 'f4', start = 0.5, dur = 1, vol = 2 }
 The function is called with a single argument, a table containing the named
 arguments.
 
-The call to an instrument function returns the instrument function itself. Hence
-intrument calls can be concatenated:
+The call to an instrument function returns the instrument function itself.
+Hence, instrument calls can be concatenated:
 
 ```lua
 sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
@@ -86,18 +86,17 @@ sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
     { freq = 'f4', start = 0.5, dur = 1, vol = 2 }
 ```
 
-
 ### Required parameters
 
 The generated score uses the syntax of Csound´s standard numeric score. The
-required parameters of each intrument or note statement are the starting time
+required parameters of each instrument or note statement are the starting time
 and the duration time. These are given by the `start` and the `dur` entries of
 the table the instrument function is called with.
 
 ### Carry of function arguments
 
 Function arguments are carried from call to call per instrument function to the
-effect that you don’t have to repeat this arguments in each call. The following
+effect that you don’t have to repeat these arguments in each call. The following
 would create an equivalent score to the example above:
 
 ```lua
@@ -111,7 +110,7 @@ sine{ freq = 'f6', start = 0, dur = 1, vol = 2 }
 You can use numbers for frequency parameters, such as `freq = 880.2`. A
 converter from note names to numeric frequencies is built in, using standard
 twelve-tone equal temperament tuning. As shown above, the note `f5` converts to
-the frequency of an *f* above the 440 Hz *a*, approximately 698.456 Hz. Sharp
+the frequency of an _f_ above the 440 Hz _a_, approximately 698.456 Hz. Sharp
 and flat notes are specified using `#` or `b` as you might expect, for example
 `f#5` or `gb5`.
 
